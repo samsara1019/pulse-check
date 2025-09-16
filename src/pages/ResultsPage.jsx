@@ -21,7 +21,8 @@ const ResultsPage = () => {
         weeklyGroups[week] = {
           week: week,
           surveys: [],
-          q1: 0, q2: 0, q3: 0, q4: 0, q5: 0
+          q1: 0, q2: 0, q3: 0, q4: 0, q5: 0,
+          count: 0
         };
       }
       weeklyGroups[week].surveys.push(item);
@@ -44,7 +45,9 @@ const ResultsPage = () => {
         q2: weekData.q2,
         q3: weekData.q3,
         q4: weekData.q4,
-        q5: weekData.q5
+        q5: weekData.q5,
+        count,
+        created_at: weekData.surveys[0].created_at
       };
     }).sort((a, b) => {
       // 주차별 정렬 (1주차, 2주차... 순으로)
@@ -205,9 +208,14 @@ const ResultsPage = () => {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="week" fontSize={10} />
                       <YAxis domain={[1, 5]} fontSize={10} />
+                      {/* count 표시 */}
                       <Tooltip 
-                        formatter={(value, name) => [value?.toFixed(1), `평점`]}
-                        labelFormatter={(label) => `${label}`}
+                        formatter={(value, name) => [`${value?.toFixed(1)}`, `평점`]}
+                        labelFormatter={(label, payload) => {
+                          if (!payload || payload.length === 0) return label;
+                          const count = payload[0].payload.count;
+                          return `${convertDate(payload[0].payload.created_at)} (응답자: ${count}명)`;
+                        }}
                       />
                       <Line 
                         type="monotone" 
