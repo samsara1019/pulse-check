@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabaseClient';
 const ResultsPage = () => {
   const navigate = useNavigate();
   const [historicalData, setHistoricalData] = useState([]);
-  // const [comments, setComments] = useState({ improvement: [], positive: [] });
+  const [comments, setComments] = useState({ improvement: [], positive: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -73,37 +73,37 @@ const ResultsPage = () => {
     }
   };
 
-  // const getComments = async () => {
-  //   try {
-  //     const { data, error } = await supabase
-  //       .from('pulse_surveys')
-  //       .select('comment1, comment2, created_at, week')
-  //       .order('created_at', { ascending: false })
-  //       .limit(20); // 최근 20개만 가져오기
+  const getComments = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('pulse_surveys')
+        .select('comment1, comment2, created_at, week')
+        .order('created_at', { ascending: false })
+        .limit(20); // 최근 20개만 가져오기
       
-  //     if (error) throw error;
+      if (error) throw error;
       
-  //     const improvement = [];
-  //     const positive = [];
+      const improvement = [];
+      const positive = [];
       
-  //     data.forEach(survey => {
-  //       if (survey.comment1 && survey.comment1.trim()) {
-  //         improvement.push({response: survey.comment1.trim(), created_at: survey.created_at});
-  //       }
-  //       if (survey.comment2 && survey.comment2.trim()) {
-  //         positive.push({response: survey.comment2.trim(), created_at: survey.created_at});
-  //       }
-  //     });
+      data.forEach(survey => {
+        if (survey.comment1 && survey.comment1.trim()) {
+          improvement.push({response: survey.comment1.trim(), created_at: survey.created_at});
+        }
+        if (survey.comment2 && survey.comment2.trim()) {
+          positive.push({response: survey.comment2.trim(), created_at: survey.created_at});
+        }
+      });
       
-  //     return {
-  //       improvement,
-  //       positive
-  //     };
-  //   } catch (err) {
-  //     console.error('Comments fetch error:', err);
-  //     throw err;
-  //   }
-  // };
+      return {
+        improvement,
+        positive
+      };
+    } catch (err) {
+      console.error('Comments fetch error:', err);
+      throw err;
+    }
+  };
 
   const convertDate = (dateString) => {
     //date를 00년 0월 0주차로
@@ -122,11 +122,11 @@ const ResultsPage = () => {
         
         const [historicalData, commentsData] = await Promise.all([
           getHistoricalData(),
-          // getComments()
+          getComments()
         ]);
         
         setHistoricalData(historicalData);
-        // setComments(commentsData);
+        setComments(commentsData);
       } catch (err) {
         console.error('Data fetch error:', err);
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -234,7 +234,7 @@ const ResultsPage = () => {
         </div>
 
         {/* 의견 섹션 */}
-        {/* <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white rounded-xl shadow-lg p-6">
           <h3 className="text-xl font-bold text-gray-800 mb-6">팀원들의 의견</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -268,7 +268,7 @@ const ResultsPage = () => {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* 재시작 버튼 */}
         <div className="text-center mt-8">
