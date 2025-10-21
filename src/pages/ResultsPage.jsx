@@ -16,16 +16,23 @@ const ResultsPage = () => {
     const weeklyGroups = {};
     
     data.forEach(item => {
-      const week = item.week || '미분류';
-      if (!weeklyGroups[week]) {
-        weeklyGroups[week] = {
-          week: week,
+      // created_at 기반으로 월과 주차 계산
+      const date = new Date(item.created_at);
+      const month = date.getMonth() + 1;
+      const week = Math.ceil((date.getDate() + (date.getDay() === 0 ? 7 : date.getDay())) / 7);
+      const key = `${month}월 ${week}주차`;
+      
+      if (!weeklyGroups[key]) {
+        weeklyGroups[key] = {
+          week: key,
+          month: month,
+          weekNumber: week,
           surveys: [],
-          q1: 0, q2: 0, q3: 0, q4: 0, q5: 0,
+          q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
           count: 0
         };
       }
-      weeklyGroups[week].surveys.push(item);
+      weeklyGroups[key].surveys.push(item);
     });
 
     // 각 주차별 평균 계산
@@ -38,22 +45,40 @@ const ResultsPage = () => {
       weekData.q3 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q3 || 0), 0) / count).toFixed(1));
       weekData.q4 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q4 || 0), 0) / count).toFixed(1));
       weekData.q5 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q5 || 0), 0) / count).toFixed(1));
+      weekData.q6 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q6 || 0), 0) / count).toFixed(1));
+      weekData.q7 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q7 || 0), 0) / count).toFixed(1));
+      weekData.q8 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q8 || 0), 0) / count).toFixed(1));
+      weekData.q9 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q9 || 0), 0) / count).toFixed(1));
+      weekData.q10 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q10 || 0), 0) / count).toFixed(1));
 
       return {
         week: weekData.week,
+        month: weekData.month,
+        weekNumber: weekData.weekNumber,
         q1: weekData.q1,
         q2: weekData.q2,
         q3: weekData.q3,
         q4: weekData.q4,
         q5: weekData.q5,
+        q6: weekData.q6,
+        q7: weekData.q7,
+        q8: weekData.q8,
+        q9: weekData.q9,
+        q10: weekData.q10,
         count,
         created_at: weekData.surveys[0].created_at
       };
     }).sort((a, b) => {
-      // 주차별 정렬 (1주차, 2주차... 순으로)
-      const aNum = parseInt(a.week.match(/\d+/)?.[0]) || 0;
-      const bNum = parseInt(b.week.match(/\d+/)?.[0]) || 0;
-      return aNum - bNum;
+      // 월과 주차별 정렬 (월 먼저, 그 다음 주차 순으로)
+      const aMonth = parseInt(a.month) || 0;
+      const bMonth = parseInt(b.month) || 0;
+      const aWeek = parseInt(a.weekNumber) || 0;
+      const bWeek = parseInt(b.weekNumber) || 0;
+      
+      if (aMonth !== bMonth) {
+        return aMonth - bMonth;
+      }
+      return aWeek - bWeek;
     });
   };
 
@@ -133,10 +158,11 @@ const ResultsPage = () => {
         
         // 오류 시 기본 데이터 설정
         setHistoricalData([
-          { week: '1주차', q1: 3.2, q2: 3.8, q3: 3.5, q4: 2.9, q5: 3.1 },
-          { week: '2주차', q1: 3.4, q2: 3.6, q3: 3.3, q4: 3.2, q5: 3.0 },
-          { week: '3주차', q1: 3.8, q2: 4.1, q3: 3.7, q4: 3.5, q5: 3.4 },
-          { week: '4주차', q1: 3.6, q2: 3.9, q3: 3.8, q4: 3.3, q5: 3.2 },
+          { week: '9월 1주차', month: '9', weekNumber: '1', q1: 3.2, q2: 3.8, q3: 3.5, q4: 2.9, q5: 3.1, q6: 3.2, q7: 3.3, q8: 3.4, q9: 3.5, q10: 3.6 },
+          { week: '9월 2주차', month: '9', weekNumber: '2', q1: 3.4, q2: 3.6, q3: 3.3, q4: 3.2, q5: 3.0, q6: 3.1, q7: 3.2, q8: 3.3, q9: 3.4, q10: 3.5 },
+          { week: '9월 3주차', month: '9', weekNumber: '3', q1: 3.8, q2: 4.1, q3: 3.7, q4: 3.5, q5: 3.4, q6: 3.5, q7: 3.6, q8: 3.7, q9: 3.8, q10: 3.9 },
+          { week: '9월 4주차', month: '9', weekNumber: '4', q1: 3.6, q2: 3.9, q3: 3.8, q4: 3.3, q5: 3.2 },
+          { week: '10월 1주차', month: '10', weekNumber: '1', q1: 3.6, q2: 3.9, q3: 3.8, q4: 3.3, q5: 3.2, q6: 3.1, q7: 3.0, q8: 2.9, q9: 2.8, q10: 2.7 },
         ]);
         // setComments([
         //   {

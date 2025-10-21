@@ -11,6 +11,11 @@ const SurveyPage = () => {
     q3: '',
     q4: '',
     q5: '',
+    q6: '',
+    q7: '',
+    q8: '',
+    q9: '',
+    q10: '',
     comment1: '',
     comment2: ''
   });
@@ -52,6 +57,9 @@ const SurveyPage = () => {
   const isFormValid = () => {
     return surveyData.q1 && surveyData.q2 && surveyData.q3 && 
            surveyData.q4 && surveyData.q5 && 
+           surveyData.q6 && surveyData.q7 &&
+           surveyData.q8 && surveyData.q9 &&
+           surveyData.q10 &&
            surveyData.comment1.trim() && surveyData.comment2.trim();
   };
 
