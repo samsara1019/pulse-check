@@ -59,7 +59,6 @@ const SurveyPage = () => {
            surveyData.q4 && surveyData.q5 && 
            surveyData.q6 && surveyData.q7 &&
            surveyData.q8 && surveyData.q9 &&
-           surveyData.q10 &&
            surveyData.comment1.trim() && surveyData.comment2.trim();
   };
 
