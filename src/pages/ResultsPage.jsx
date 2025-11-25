@@ -14,83 +14,91 @@ const ResultsPage = () => {
   // 주차별 데이터를 처리하는 함수
   const processWeeklyData = (data) => {
     const weeklyGroups = {};
-    
-    data.forEach(item => {
+
+    data.forEach((item) => {
       // created_at 기반으로 월과 주차 계산
       const date = new Date(item.created_at);
       const month = date.getMonth() + 1;
       const week = Math.ceil((date.getDate() + (date.getDay() === 0 ? 7 : date.getDay())) / 7);
       const key = `${month}월 ${week}주차`;
-      
+
       if (!weeklyGroups[key]) {
         weeklyGroups[key] = {
           week: key,
           month: month,
           weekNumber: week,
           surveys: [],
-          q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0, q9: 0, q10: 0,
-          count: 0
+          q1: 0,
+          q2: 0,
+          q3: 0,
+          q4: 0,
+          q5: 0,
+          q6: 0,
+          q7: 0,
+          q8: 0,
+          q9: 0,
+          q10: 0,
+          count: 0,
         };
       }
       weeklyGroups[key].surveys.push(item);
     });
 
     // 각 주차별 평균 계산
-    return Object.values(weeklyGroups).map(weekData => {
-      const count = weekData.surveys.length;
-      if (count === 0) return weekData;
+    return Object.values(weeklyGroups)
+      .map((weekData) => {
+        const count = weekData.surveys.length;
+        if (count === 0) return weekData;
 
-      weekData.q1 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q1 || 0), 0) / count).toFixed(1));
-      weekData.q2 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q2 || 0), 0) / count).toFixed(1));
-      weekData.q3 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q3 || 0), 0) / count).toFixed(1));
-      weekData.q4 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q4 || 0), 0) / count).toFixed(1));
-      weekData.q5 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q5 || 0), 0) / count).toFixed(1));
-      weekData.q6 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q6 || 0), 0) / count).toFixed(1));
-      weekData.q7 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q7 || 0), 0) / count).toFixed(1));
-      weekData.q8 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q8 || 0), 0) / count).toFixed(1));
-      weekData.q9 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q9 || 0), 0) / count).toFixed(1));
-      weekData.q10 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q10 || 0), 0) / count).toFixed(1));
+        weekData.q1 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q1 || 0), 0) / count).toFixed(1));
+        weekData.q2 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q2 || 0), 0) / count).toFixed(1));
+        weekData.q3 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q3 || 0), 0) / count).toFixed(1));
+        weekData.q4 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q4 || 0), 0) / count).toFixed(1));
+        weekData.q5 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q5 || 0), 0) / count).toFixed(1));
+        weekData.q6 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q6 || 0), 0) / count).toFixed(1));
+        weekData.q7 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q7 || 0), 0) / count).toFixed(1));
+        weekData.q8 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q8 || 0), 0) / count).toFixed(1));
+        weekData.q9 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q9 || 0), 0) / count).toFixed(1));
+        weekData.q10 = parseFloat((weekData.surveys.reduce((sum, s) => sum + (s.q10 || 0), 0) / count).toFixed(1));
 
-      return {
-        week: weekData.week,
-        month: weekData.month,
-        weekNumber: weekData.weekNumber,
-        q1: weekData.q1,
-        q2: weekData.q2,
-        q3: weekData.q3,
-        q4: weekData.q4,
-        q5: weekData.q5,
-        q6: weekData.q6,
-        q7: weekData.q7,
-        q8: weekData.q8,
-        q9: weekData.q9,
-        q10: weekData.q10,
-        count,
-        created_at: weekData.surveys[0].created_at
-      };
-    }).sort((a, b) => {
-      // 월과 주차별 정렬 (월 먼저, 그 다음 주차 순으로)
-      const aMonth = parseInt(a.month) || 0;
-      const bMonth = parseInt(b.month) || 0;
-      const aWeek = parseInt(a.weekNumber) || 0;
-      const bWeek = parseInt(b.weekNumber) || 0;
-      
-      if (aMonth !== bMonth) {
-        return aMonth - bMonth;
-      }
-      return aWeek - bWeek;
-    });
+        return {
+          week: weekData.week,
+          month: weekData.month,
+          weekNumber: weekData.weekNumber,
+          q1: weekData.q1,
+          q2: weekData.q2,
+          q3: weekData.q3,
+          q4: weekData.q4,
+          q5: weekData.q5,
+          q6: weekData.q6,
+          q7: weekData.q7,
+          q8: weekData.q8,
+          q9: weekData.q9,
+          q10: weekData.q10,
+          count,
+          created_at: weekData.surveys[0].created_at,
+        };
+      })
+      .sort((a, b) => {
+        // 월과 주차별 정렬 (월 먼저, 그 다음 주차 순으로)
+        const aMonth = parseInt(a.month) || 0;
+        const bMonth = parseInt(b.month) || 0;
+        const aWeek = parseInt(a.weekNumber) || 0;
+        const bWeek = parseInt(b.weekNumber) || 0;
+
+        if (aMonth !== bMonth) {
+          return aMonth - bMonth;
+        }
+        return aWeek - bWeek;
+      });
   };
 
   const getHistoricalData = async () => {
     try {
-      const { data, error } = await supabase
-        .from('pulse_surveys')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
+      const { data, error } = await supabase.from('pulse_surveys').select('*').order('created_at', { ascending: false });
+
       if (error) throw error;
-      
+
       return processWeeklyData(data);
     } catch (err) {
       console.error('Historical data fetch error:', err);
@@ -105,24 +113,24 @@ const ResultsPage = () => {
         .select('comment1, comment2, created_at, week')
         .order('created_at', { ascending: false })
         .limit(20); // 최근 20개만 가져오기
-      
+
       if (error) throw error;
-      
+
       const improvement = [];
       const positive = [];
-      
-      data.forEach(survey => {
+
+      data.forEach((survey) => {
         if (survey.comment1 && survey.comment1.trim()) {
-          improvement.push({response: survey.comment1.trim(), created_at: survey.created_at});
+          improvement.push({ response: survey.comment1.trim(), created_at: survey.created_at });
         }
         if (survey.comment2 && survey.comment2.trim()) {
-          positive.push({response: survey.comment2.trim(), created_at: survey.created_at});
+          positive.push({ response: survey.comment2.trim(), created_at: survey.created_at });
         }
       });
-      
+
       return {
         improvement,
-        positive
+        positive,
       };
     } catch (err) {
       console.error('Comments fetch error:', err);
@@ -137,32 +145,85 @@ const ResultsPage = () => {
     const month = date.getMonth() + 1;
     const week = Math.ceil((date.getDate() + (date.getDay() === 0 ? 7 : date.getDay())) / 7);
     return `${year}년 ${month}월 ${week}주차`;
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        
-        const [historicalData, commentsData] = await Promise.all([
-          getHistoricalData(),
-          getComments()
-        ]);
-        
+
+        const [historicalData, commentsData] = await Promise.all([getHistoricalData(), getComments()]);
+
         setHistoricalData(historicalData);
         setComments(commentsData);
       } catch (err) {
         console.error('Data fetch error:', err);
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
-        
+
         // 오류 시 기본 데이터 설정
         setHistoricalData([
-          { week: '9월 1주차', month: '9', weekNumber: '1', q1: 3.2, q2: 3.8, q3: 3.5, q4: 2.9, q5: 3.1, q6: 3.2, q7: 3.3, q8: 3.4, q9: 3.5, q10: 3.6 },
-          { week: '9월 2주차', month: '9', weekNumber: '2', q1: 3.4, q2: 3.6, q3: 3.3, q4: 3.2, q5: 3.0, q6: 3.1, q7: 3.2, q8: 3.3, q9: 3.4, q10: 3.5 },
-          { week: '9월 3주차', month: '9', weekNumber: '3', q1: 3.8, q2: 4.1, q3: 3.7, q4: 3.5, q5: 3.4, q6: 3.5, q7: 3.6, q8: 3.7, q9: 3.8, q10: 3.9 },
+          {
+            week: '9월 1주차',
+            month: '9',
+            weekNumber: '1',
+            q1: 3.2,
+            q2: 3.8,
+            q3: 3.5,
+            q4: 2.9,
+            q5: 3.1,
+            q6: 3.2,
+            q7: 3.3,
+            q8: 3.4,
+            q9: 3.5,
+            q10: 3.6,
+          },
+          {
+            week: '9월 2주차',
+            month: '9',
+            weekNumber: '2',
+            q1: 3.4,
+            q2: 3.6,
+            q3: 3.3,
+            q4: 3.2,
+            q5: 3.0,
+            q6: 3.1,
+            q7: 3.2,
+            q8: 3.3,
+            q9: 3.4,
+            q10: 3.5,
+          },
+          {
+            week: '9월 3주차',
+            month: '9',
+            weekNumber: '3',
+            q1: 3.8,
+            q2: 4.1,
+            q3: 3.7,
+            q4: 3.5,
+            q5: 3.4,
+            q6: 3.5,
+            q7: 3.6,
+            q8: 3.7,
+            q9: 3.8,
+            q10: 3.9,
+          },
           { week: '9월 4주차', month: '9', weekNumber: '4', q1: 3.6, q2: 3.9, q3: 3.8, q4: 3.3, q5: 3.2 },
-          { week: '10월 1주차', month: '10', weekNumber: '1', q1: 3.6, q2: 3.9, q3: 3.8, q4: 3.3, q5: 3.2, q6: 3.1, q7: 3.0, q8: 2.9, q9: 2.8, q10: 2.7 },
+          {
+            week: '10월 1주차',
+            month: '10',
+            weekNumber: '1',
+            q1: 3.6,
+            q2: 3.9,
+            q3: 3.8,
+            q4: 3.3,
+            q5: 3.2,
+            q6: 3.1,
+            q7: 3.0,
+            q8: 2.9,
+            q9: 2.8,
+            q10: 2.7,
+          },
         ]);
         // setComments([
         //   {
@@ -219,7 +280,7 @@ const ResultsPage = () => {
         {/* 그래프 섹션 */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <h3 className="text-xl font-bold text-gray-800 mb-6">주차별 우리팀의 추이</h3>
-          
+
           {historicalData.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-500">아직 데이터가 없습니다.</p>
@@ -235,7 +296,7 @@ const ResultsPage = () => {
                       <XAxis dataKey="week" fontSize={10} />
                       <YAxis domain={[1, 5]} fontSize={10} />
                       {/* count 표시 */}
-                      <Tooltip 
+                      <Tooltip
                         formatter={(value, name) => [`${value?.toFixed(1)}`, `평점`]}
                         labelFormatter={(label, payload) => {
                           if (!payload || payload.length === 0) return label;
@@ -243,10 +304,10 @@ const ResultsPage = () => {
                           return `${convertDate(payload[0].payload.created_at)} (응답자: ${count}명)`;
                         }}
                       />
-                      <Line 
-                        type="monotone" 
-                        dataKey={`q${index + 1}`} 
-                        stroke="#3B82F6" 
+                      <Line
+                        type="monotone"
+                        dataKey={`q${index + 1}`}
+                        stroke="#3B82F6"
                         strokeWidth={3}
                         dot={{ fill: '#3B82F6', r: 4 }}
                         connectNulls={false}
@@ -262,15 +323,17 @@ const ResultsPage = () => {
         {/* 의견 섹션 */}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h3 className="text-xl font-bold text-gray-800 mb-6">팀원들의 의견</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h4 className="text-lg font-semibold text-gray-700 mb-4">{text_questions[0]}</h4>
               <div className="space-y-3">
                 {comments.improvement.length > 0 ? (
                   comments.improvement.map((comment, index) => (
-                    <div key={index} className="bg-red-50 border-l-4 border-red-400 p-3 rounded">
-                      <p className="text-sm text-gray-700">{comment.response} - {convertDate(comment.created_at)}</p>
+                    <div key={index} className="bg-green-50 border-l-4 border-green-400 p-3 rounded">
+                      <p className="text-sm text-gray-700">
+                        {comment.response} - {convertDate(comment.created_at)}
+                      </p>
                     </div>
                   ))
                 ) : (
@@ -278,14 +341,16 @@ const ResultsPage = () => {
                 )}
               </div>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold text-gray-700 mb-4">{text_questions[1]}</h4>
               <div className="space-y-3">
                 {comments.positive.length > 0 ? (
                   comments.positive.map((comment, index) => (
-                    <div key={index} className="bg-green-50 border-l-4 border-green-400 p-3 rounded">
-                      <p className="text-sm text-gray-700">{comment.response} - {convertDate(comment.created_at)}</p>
+                    <div key={index} className="bg-red-50 border-l-4 border-red-400 p-3 rounded">
+                      <p className="text-sm text-gray-700">
+                        {comment.response} - {convertDate(comment.created_at)}
+                      </p>
                     </div>
                   ))
                 ) : (
